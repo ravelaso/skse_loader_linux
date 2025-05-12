@@ -10,7 +10,7 @@ This aims to wrap the skse64_loader and avoid "Couldn't load arguments" / "Could
 
 ## Installation
 
-1. Rename the 'SkyrimSELauncher.exe' to 'SkyrimSELauncher.exe'
+1. Rename the 'SkyrimSELauncher.exe' to 'OldSkyrimSELauncher.exe'
 2. Paste the new SkyrimSELauncher.exe
 3. Launch the game from Steam.
 
