@@ -17,7 +17,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to open log file: %v", err)
 	}
-	defer logFile.Close()
+	defer func(logFile *os.File) {
+		err := logFile.Close()
+		if err != nil {
+			log.Fatalf("Failed to close log file: %v", err)
+		}
+	}(logFile)
 
 	// Configure the default logger to write to the log file
 	log.SetOutput(logFile)
@@ -44,10 +49,6 @@ func main() {
 	} else if _, err := os.Stat(fosePath); err == nil {
 		loaderPath = fosePath
 		log.Printf("Found loader: %s", fosePath)
-	} else {
-		log.Fatalf("Failed to find skse64_loader.exe or fose_loader.exe in %s", exeDir)
-		fmt.Scanln()
-		os.Exit(1)
 	}
 
 	// Set working directory to the executable directory
@@ -111,7 +112,10 @@ func main() {
 			}
 			output := string(scanner[:n])
 			log.Printf("STDERR: %s", output)
-			fmt.Fprintf(os.Stderr, "%s", output) // Still show in console
+			_, err = fmt.Fprintf(os.Stderr, "%s", output)
+			if err != nil {
+				log.Printf("Error writing to stderr: %v", err)
+			} // Still show in console
 		}
 		done <- true
 	}()
